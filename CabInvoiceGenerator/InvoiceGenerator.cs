@@ -78,5 +78,24 @@ namespace CabInvoiceGenerator
             }
             return result / rides.Length;
         }
+        public InvoiceSummary CalculateMultipleRidesSummary(Ride[] rides)
+        {
+            double result = 0.0d;
+            try
+            {
+                foreach (var data in rides)
+                {
+                    result += CalculateFair((int)data.distance, (int)data.time);
+                }
+            }
+            catch (InvoiceException)
+            {
+                if (rides == null)
+                {
+                    throw new InvoiceException(InvoiceException.ExceptionType.NULL_RIDES, "Rides are Null");
+                }
+            }
+            return new InvoiceSummary(rides.Length, result);
+        }
     }
 }
