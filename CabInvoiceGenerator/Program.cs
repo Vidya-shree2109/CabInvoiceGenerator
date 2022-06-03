@@ -8,7 +8,7 @@ public class Program
         bool verify = true;
         while (verify)
         {
-            Console.WriteLine("\nEnter :\n1.Display Cab Fare\n2.Display Fare Of Multiple Rides\n3.Display Invoice Summary\n4.Invoice Summary Given the User id\n5.Stop the Execution\n");
+            Console.WriteLine("\nEnter :\n1.Display Cab Fare\n2.Display Fare Of Multiple Rides\n3.Display Invoice Summary\n4.Invoice Summary By Entering User id\n5.Rides For Premium Invoice\n6.Stop the Execution\n");
             int option = Convert.ToInt32(Console.ReadLine());
             switch (option)
             {
@@ -18,7 +18,7 @@ public class Program
                     Console.WriteLine("Result = " + result);
                     break;
                 case 2:
-                    InvoiceGenerator invoice = new InvoiceGenerator(RideType.PREMIER);
+                    InvoiceGenerator invoice = new InvoiceGenerator(RideType.PREMIUM);
                     Ride[] rides = { new Ride(15, 5), new Ride(25, 10), new Ride(20, 20) };
                     double result1 = invoice.CalculateMultipleRides(rides);
                     Console.WriteLine("Result is:->" + result1);
@@ -38,6 +38,12 @@ public class Program
                     Console.WriteLine("Total Number of Rides = " + summary.totalNumberOfRides + "\n" + "Total Fare = " + summary.totalFair + "\n" + "Average Fare = " + summary.averageFair);
                     break;
                 case 5:
+                    InvoiceGenerator preInvoice = new InvoiceGenerator(RideType.PREMIUM);
+                    Ride[] preRides = { new Ride(15, 10), new Ride(35, 35), new Ride(25, 15), new Ride(15, 15), new Ride(50, 60) };
+                    InvoiceSummary preInvoSummary = preInvoice.InvoiceSummaryForPremiumRides(preRides);
+                    Console.WriteLine("Total Number of Rides = " + preInvoSummary.totalNumberOfRides + "\n" + "Total Fare = " + preInvoSummary.totalFair + "\n" + "Average Fare = " + preInvoSummary.averageFair);
+                    break;
+                case 6:
                     verify = false;
                     break;
                 default: Console.WriteLine("\nEnter Valid Option.. !\n"); break;

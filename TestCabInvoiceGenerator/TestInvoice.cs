@@ -15,7 +15,7 @@ namespace TestCabInvoiceGenerator
         [Test]
         public void GivenIntegerInput_ShouldReturn_MultipleRides_TotalFair()
         {
-            InvoiceGenerator invoice = new InvoiceGenerator(RideType.PREMIER);
+            InvoiceGenerator invoice = new InvoiceGenerator(RideType.PREMIUM);
             Ride[] rides = { new Ride(2, 3), new Ride(4, 5), new Ride(5, 6) };
             double result = invoice.CalculateMultipleRides(rides);
             Assert.AreEqual(result, 46);
@@ -37,6 +37,14 @@ namespace TestCabInvoiceGenerator
             invoice.MapUserId(userId, ride);
             InvoiceSummary expectedInvoice = invoice.GetRideInvoiceSummary("1005abc");
             Assert.AreEqual(5, expectedInvoice.totalNumberOfRides);
+        }
+        [Test]
+        public void InputInInteger_ShouldReturn_MultipleRides_TotalFair_InvoiceSummary_ForPremiumRides()
+        {
+            InvoiceGenerator invoice = new InvoiceGenerator(RideType.PREMIUM);
+            Ride[] preRides = { new Ride(15, 10), new Ride(35, 35), new Ride(25, 15), new Ride(15, 15), new Ride(50, 60) };
+            InvoiceSummary result = invoice.CalculateMultipleRidesSummary(preRides);
+            Assert.AreEqual(result.totalNumberOfRides, preRides.Length);
         }
     }
 }
