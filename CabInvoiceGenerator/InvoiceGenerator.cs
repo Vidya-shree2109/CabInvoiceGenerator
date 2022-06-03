@@ -8,13 +8,75 @@ namespace CabInvoiceGenerator
 {
     public class InvoiceGenerator
     {
-        const int MIN_FAIR = 5;
-        const int FAIR_PER_KM = 10;
-        const int FAIR_PER_MIN = 1;
+        RideType rideType;
+        private readonly int MIN_FAIR;
+        private readonly int FAIR_PR_KM;
+        private readonly int FAIR_PR_MINUTE;
+        public InvoiceGenerator(RideType rideType)
+        {
+            this.rideType = rideType;
+            try
+            {
+                if (rideType.Equals(RideType.NORMAL))
+                {
+                    this.MIN_FAIR = 10;
+                    this.FAIR_PR_KM = 15;
+                    this.FAIR_PR_MINUTE = 5;
+                }
+                else if (rideType.Equals(RideType.PREMIER))
+                {
+                    this.MIN_FAIR = 5;
+                    this.FAIR_PR_KM = 10;
+                    this.FAIR_PR_MINUTE = 2;
+                }
+            }
+            catch (InvoiceException)
+            {
+                throw new InvoiceException(InvoiceException.ExceptionType.INVALID_RIDE_TYPE, "Invalid Ride");
+            }
+        }
         public double CalculateFair(int distance, int time)
         {
-            double calculatedFair = distance * FAIR_PER_KM + time * FAIR_PER_MIN;
-            return calculatedFair;
+            double calculateFair = 0.0d;
+            try
+            {
+                calculateFair = FAIR_PR_KM * distance + time * FAIR_PR_MINUTE;
+            }
+            catch (InvoiceException)
+            {
+                if (rideType.Equals(null))
+                {
+                    throw new InvoiceException(InvoiceException.ExceptionType.INVALID_RIDE_TYPE, "Invalid Ride");
+                }
+                if (distance == 0)
+                {
+                    throw new InvoiceException(InvoiceException.ExceptionType.INVALID_DISTANCE, "Please Tell me Valid Distance");
+                }
+                if (time < 0)
+                {
+                    throw new InvoiceException(InvoiceException.ExceptionType.INVALID_TIME, "Time is invalid");
+                }
+            }
+            return Math.Max(calculateFair, MIN_FAIR);
+        }
+        public double CalculateMultipleRides(Ride[] rides)
+        {
+            double result = 0.0d;
+            try
+            {
+                foreach (var data in rides)
+                {
+                    result += CalculateFair((int)data.distance, (int)data.time);
+                }
+            }
+            catch (InvoiceException)
+            {
+                if (rides == null)
+                {
+                    throw new InvoiceException(InvoiceException.ExceptionType.NULL_RIDES, "Rides are Null");
+                }
+            }
+            return result / rides.Length;
         }
     }
 }
