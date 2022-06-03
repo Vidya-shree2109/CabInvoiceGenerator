@@ -12,6 +12,7 @@ namespace CabInvoiceGenerator
         private readonly int MIN_FAIR;
         private readonly int FAIR_PR_KM;
         private readonly int FAIR_PR_MINUTE;
+        RideRepository repository = new RideRepository();
         public InvoiceGenerator(RideType rideType)
         {
             this.rideType = rideType;
@@ -77,6 +78,7 @@ namespace CabInvoiceGenerator
                 }
             }
             return result / rides.Length;
+
         }
         public InvoiceSummary CalculateMultipleRidesSummary(Ride[] rides)
         {
@@ -96,6 +98,15 @@ namespace CabInvoiceGenerator
                 }
             }
             return new InvoiceSummary(rides.Length, result);
+        }
+        public void MapUserId(string usreId, Ride[] rides)
+        {
+            this.repository.AddRides(usreId, rides);
+        }
+        public InvoiceSummary GetRideInvoiceSummary(string userId)
+        {
+            Ride[] result = this.repository.GetRide(userId);
+            return CalculateMultipleRidesSummary(result);
         }
     }
 }
